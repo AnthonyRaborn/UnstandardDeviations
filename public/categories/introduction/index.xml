@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Introduction on Unstandard Deviations</title>
+    <link>/categories/introduction/</link>
+    <description>Recent content in Introduction on Unstandard Deviations</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 04 Apr 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/introduction/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Hello World</title>
+      <link>/2018/04/04/hello-world/</link>
+      <pubDate>Wed, 04 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/04/04/hello-world/</guid>
+      <description>This is the first trial post for the Unstandard Deviations blog, a site in which I aim to present some of my own musings about the world, build lessons for using R and demonstrating some of its capabilities, as well as keep track of some of the research and applied work I’ve done and my thoughts on them throughout the week. I don’t expect a large following; in fact, if I even have a single dedicated reader then this would be a success.</description>
+    </item>
+    
+  </channel>
+</rss>
