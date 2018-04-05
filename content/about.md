@@ -1,6 +1,6 @@
 ---
 title: "About"
-date: "April 4, 2018"
+date: "04/04/2018"
 ---
 
 
