@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Unstandard Deviations</title>
+    <link>/</link>
+    <description>Recent content on Unstandard Deviations</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 04 Apr 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Hello World</title>
+      <link>/2018/04/04/hello-world/</link>
+      <pubDate>Wed, 04 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/04/04/hello-world/</guid>
+      <description>This is the first trial post for the Unstandard Deviations blog, a site in which I aim to present some of my own musings about the world, build lessons for using R and demonstrating some of its capabilities, as well as keep track of some of the research and applied work I’ve done and my thoughts on them throughout the week. I don’t expect a large following; in fact, if I even have a single dedicated reader then this would be a success.</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/about/</guid>
+      <description>My name is Anthony Raborn. I am a Ph.D. Candidate at the University of Florida in Research and Evaluation Methodology. This is a blog that will discuss mostly statistical and research matters that I encounter in my life, with a little bit of worldly commentary thrown in for good measure.
+The current theme for this website is an excellent minimalist theme produced by Yihui Xie, and most or all of the content is produced in R with the blogdown package serving as the lynchpin.</description>
+    </item>
+    
+  </channel>
+</rss>
