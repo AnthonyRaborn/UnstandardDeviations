@@ -2,25 +2,33 @@ baseurl = "/"
 languageCode = "en-us"
 title = "Unstandard Deviations"
 theme = "hugo-xmin"
-googleAnalytics = ""
-disqusShortname = ""
+googleAnalytics = "UA-117105788-1"
+disqusShortname = "unstandarddeviations-1"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
 [permalinks]
     post = "/:year/:month/:day/:slug/"
 
 [[menu.main]]
+    name = "Main Page"
+    url = ""
+    weight = 1
+[[menu.main]]
     name = "About"
     url = "/about/"
+    weight = 2
 [[menu.main]]
     name = "GitHub"
     url = "https://github.com/AnthonyRaborn"
+    weight = 3
 [[menu.main]]
     name = "Twitter"
     url = "https://twitter.com/AnthonyRaborn"
+    weight = 4
 [[menu.main]]
     name = "LinkedIn"
     url = "https://www.linkedin.com/in/anthony-raborn-317a01107/"
+    weight = 5
 
 [params]
     description = "A website built through Hugo and blogdown."
