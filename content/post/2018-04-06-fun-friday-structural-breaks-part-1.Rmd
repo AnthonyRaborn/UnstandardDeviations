@@ -1,0 +1,149 @@
+---
+title: 'Fun Friday: Structural Breaks Part 1'
+author: ~
+date: '2018-04-06'
+slug: fun-friday-structural-breaks-part-1
+categories:
+  - Fun Friday
+tags:
+  - R
+  - Structural Breaks
+  - SAT
+  - Simulation
+---
+
+This is the introductory "Fun Friday" post, and unfortunately will be a rehash of some work I've done in the past with a colleague (Zachary Collier, Ph.D. Candidate in my program). The topic is a concept from econometrics called "Structural Breaks", which are also referred to as change points in some contexts. This post walks through the application of structural breaks to SAT data using the `strucchange` package. This example was created three years ago, so other packages for performing this analysis probably exist, but that's left as an exercise for any interested reader.
+
+We used Structural Breaks to test the stability of SAT scores across subtests,ethnicities,and gender. A structural break appears when we see an unexpected break in a time-series. Our approach is closely related to algorithms described in Bai & Perron (2003) for simultaneous estimation of multiple breakpoints. The algorithm obtains global minimizers of the sum of squared residuals based on the principle of dynamic programming. Our SB model will consist of multiple submodels, where each submodel will detect a new change-point.
+
+This first post introduces the package and how to use it. Future posts will apply these procedures to SAT data. For now, let's show off the `strucchange` package.
+
+
+# Part 1: Testing Structural Breaks 
+### a. Data setup
+
+Structural breaks is designed to test unexpected shifts in time series. We need to determine if those shifts are detected by rises, declines, and/or abrupt changes in the data.
+
+First, we simulate a vector with 100 points that steadily increases by .5.
+
+```{r}
+Mean.rise <- c(0:100, by=.5)
+```
+
+We repeat the above step for a vector that steadily declines.
+
+```{r}
+Mean.decline <- c(100:0, by=.5)
+```
+
+Then, we make a time-series with the mean rise and decline and set the dates from 1915 to 2015 with `ts` function. This will allow us to identify the dates at which any breaks occur; otherwise, we would have to use the observation number.These years were chosen, because we have 100 observations (one observation per year). 
+
+```{r}
+Mean.rise <- ts(Mean.rise, start=c(1915), end=c(2015), frequency=1)
+plot(Mean.rise)
+
+Mean.decline <- ts(Mean.decline, start=c(1915), end=c(2015), frequency=1)
+plot(Mean.decline)
+```
+
+### b. An Introduction to Structural Breaks Functions
+
+Compute a series of F statistics for time-series using the `Fstats` function. Then, plot the F statistics.  For every potential change point between the start and end dates, an F statistic is computed.  This statistic has an asypmtotic chi-squared distribution with k degress of freedom; if the computed F statistic is significant, we reject our null hypothesis (H0: The time-series is stable). `Fstats` cannot be used to determine more than 1 breakpoint, but can indicate the location of potential breakpoints. 
+
+```{r}
+require(strucchange)
+f.break <- Fstats(Mean.rise~1)
+plot(f.break)
+
+f.break <- Fstats(Mean.decline~1)
+plot(f.break)
+```
+
+As the maximum of a sequence of F statistics is equivalent to the minimum OLS estimator of the breakpoint in a 2-segment partition it can be extracted by `breakpoints` from an object of class "Fstats" as computed by Fstats. Use the `breakpoints` function in the strucchange package to get a computation of breakpoints in regression relationship. The function computes the number and location of the optimal breakpoints.  Our goal here is to determine the _m_ number of breaks, so we use the `confint` function to determine the breakpoints and their confidence intervals.  
+
+```{r}
+Rise.bp<-breakpoints(Mean.rise~1, data=Mean.rise)
+Rise.bp
+plot(Rise.bp)
+confint(Rise.bp)
+
+Decline.bp<-breakpoints(Mean.decline~1, data=Mean.decline)
+Decline.bp
+plot(Decline.bp)
+confint(Decline.bp)
+```
+
+Plotting the *.bp file shows the BIC (Bayesian Information Criterion, a model fit statistic) and the RSS (Residual Sum of Squares) estimates of the number of stable areas (i.e., number of areas with approximately equal means) in the data. In most cases, `breakpoints` returns a partition of the data according to the point at which these values meet. In both cases above, BIC and RSS agree that there are at least 5 breakpoints (i.e. six areas of stability) in both data sets.
+
+The graph below shows the consistency in structural breaks ability to detect instability amongst data sets with equal but opposing increases and decreases.
+
+```{r}
+plot(Mean.rise, main="Rise and Decline Simulation", sub="from 1915 to 2015",ylab="Simulated Scores",ylim=c(0,100))
+lines(Mean.decline, col=2)
+legend('topright', c("Rise","Decline"),col=c(1,2),pch=15)
+abline(v=c(1930, 1947, 1964, 1981, 1998), col=4,lty=2)
+```
+
+### c. Structural Breaks with More Data Types and Different Segment Sizes
+#### I. Exponential curves:
+
+We need to test the breakpoint function's flexibility to change the minimal segment size either given as a fraction relative to the sample size or as an interger giving the minimal number of observations in each segment.
+
+Generate regular sequences between 0 and 100 by 1 for a vector x.  For x2, generate regular sequences between -50 and 50 by 1. Make vector y1 vector x to the fourth power, vector y2 vector x to the one fourth power, and vector y3 vector x2 to the third power.  
+
+```{r}
+x<-seq(0,100,by=1)
+x2 <- seq(-50,50,by=1)
+
+y1 <- x^4
+y2 <- (x)^(1/4)
+y3 <- x2^3
+```
+
+Let's look at y1 first. How does changing the resolution, a.k.a. the minimum number of observations required for each breakpoint, affect the estimates of the breakpoints?
+
+```{r}
+f.break <- Fstats(y1~1)
+plot(f.break)
+y1a.bp<-breakpoints(y1~1)
+y1a.bp
+plot(y1)
+abline(v=time(y1)[y1a.bp$breakpoints],col=2,lty=2)
+
+f.break <- Fstats(y1~1,from=5)
+plot(f.break)
+y1b.bp<-breakpoints(y1~1,h=5)
+y1b.bp
+plot(y1)
+abline(v=time(y1)[y1b.bp$breakpoints],col=4,lty=2,lwd=2)
+abline(v=time(y1)[y1a.bp$breakpoints],col=2,lty=2)
+```
+
+The first `Fstat` and breakpoint location graphs of y1 shows where the breaks occur in the data with the default resolution of `from=0.15` and `h=0.15` respectively (that is, a minimum of 15% of the observations in each area of stability). The second `Fstat` graph and the `breakpoints` function uses `from=5` and `h=5` (a minimum of 5 observations in each area of stability), while the final graph plots the new breakpoints in blue and the old breakpoints in red. As we can see, changing the _from_ and _h_ values can change the number of breaks while potentially keeping some of the same breakpoints. The values we choose should be based on a) empirical theory that suggests the minimum number of observations before a change can be detected or b) the resolution we decide we want to have.
+
+With the effects of resolution determined, let's continue testing the structural break null hypothesis for vectors y2 and y3 (with the default resolution settings). We should expect to see an equivalent set of breakpoints for y2 based on our previous trials, while for y3 we should see an island of stability in the middle of the sequence and equivalent sets of breakpoints at the beginning and end of it.
+
+```{r}
+f.break <- Fstats(y2~1)
+plot(f.break)
+y2.bp<-breakpoints(y2~1,h=5)
+y2.bp
+plot(y2)
+abline(v=time(y2)[y2.bp$breakpoints],col=2,lty=2)
+
+f.break <- Fstats(y3~1)
+plot(f.break)
+y3.bp<-breakpoints(y3~1,h=5)
+y3.bp
+plot(y3)
+abline(v=time(y3)[y3.bp$breakpoints],col=2,lty=2)
+```
+
+These graphs confirm our expectations! 
+
+# Closing Remarks
+
+This was a rather long introduction to structural breaks, but hopefully does well to showcase some of the circumstances the procedure may be used. Next Friday, I'll demonstrate how to use structural breaks with some real SAT data.
+
+Anthony
+
