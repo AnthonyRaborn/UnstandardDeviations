@@ -7,6 +7,15 @@
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/fonts.css" />
     
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-117105788-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-117105788-1');
+</script>
+
   </head>
 
   <body>
@@ -86,24 +95,18 @@ ga('send', 'pageview');
 <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-117105788-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-117105788-1');
-</script>
 <div id="disqus_thread"></div>
 <script>
 
 
-
-
-
-(function() { 
+var disqus_config = function () {
+this.page.url = "/post/";  
+this.page.identifier = "/post/"; 
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
 var d = document, s = d.createElement('script');
-s.src = 'https://unstandarddeviations-1.disqus.com/embed.js';
+s.src = 'https:
 s.setAttribute('data-timestamp', +new Date());
 (d.head || d.body).appendChild(s);
 })();
