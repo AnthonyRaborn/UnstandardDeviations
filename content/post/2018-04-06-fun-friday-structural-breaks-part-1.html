@@ -1,0 +1,239 @@
+---
+title: 'Fun Friday: Structural Breaks Part 1'
+author: ~
+date: '2018-04-06'
+slug: fun-friday-structural-breaks-part-1
+categories:
+  - Fun Friday
+tags:
+  - R
+  - Structural Breaks
+  - SAT
+  - Simulation
+---
+
+
+
+<p>This is the introductory “Fun Friday” post, and unfortunately will be a rehash of some work I’ve done in the past with a colleague (Zachary Collier, Ph.D. Candidate in my program). The topic is a concept from econometrics called “Structural Breaks”, which are also referred to as change points in some contexts. This post walks through the application of structural breaks to SAT data using the <code>strucchange</code> package. This example was created three years ago, so other packages for performing this analysis probably exist, but that’s left as an exercise for any interested reader.</p>
+<p>We used Structural Breaks to test the stability of SAT scores across subtests,ethnicities,and gender. A structural break appears when we see an unexpected break in a time-series. Our approach is closely related to algorithms described in Bai &amp; Perron (2003) for simultaneous estimation of multiple breakpoints. The algorithm obtains global minimizers of the sum of squared residuals based on the principle of dynamic programming. Our SB model will consist of multiple submodels, where each submodel will detect a new change-point.</p>
+<p>This first post introduces the package and how to use it. Future posts will apply these procedures to SAT data. For now, let’s show off the <code>strucchange</code> package.</p>
+<div id="part-1-testing-structural-breaks" class="section level1">
+<h1>Part 1: Testing Structural Breaks</h1>
+<div id="a.-data-setup" class="section level3">
+<h3>a. Data setup</h3>
+<p>Structural breaks is designed to test unexpected shifts in time series. We need to determine if those shifts are detected by rises, declines, and/or abrupt changes in the data.</p>
+<p>First, we simulate a vector with 100 points that steadily increases by .5.</p>
+<pre class="r"><code>Mean.rise &lt;- c(0:100, by=.5)</code></pre>
+<p>We repeat the above step for a vector that steadily declines.</p>
+<pre class="r"><code>Mean.decline &lt;- c(100:0, by=.5)</code></pre>
+<p>Then, we make a time-series with the mean rise and decline and set the dates from 1915 to 2015 with <code>ts</code> function. This will allow us to identify the dates at which any breaks occur; otherwise, we would have to use the observation number.These years were chosen, because we have 100 observations (one observation per year).</p>
+<pre class="r"><code>Mean.rise &lt;- ts(Mean.rise, start=c(1915), end=c(2015), frequency=1)
+plot(Mean.rise)</code></pre>
+<p><img src="/post/2018-04-06-fun-friday-structural-breaks-part-1_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code>Mean.decline &lt;- ts(Mean.decline, start=c(1915), end=c(2015), frequency=1)
+plot(Mean.decline)</code></pre>
+<p><img src="/post/2018-04-06-fun-friday-structural-breaks-part-1_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
+</div>
+<div id="b.-an-introduction-to-structural-breaks-functions" class="section level3">
+<h3>b. An Introduction to Structural Breaks Functions</h3>
+<p>Compute a series of F statistics for time-series using the <code>Fstats</code> function. Then, plot the F statistics. For every potential change point between the start and end dates, an F statistic is computed. This statistic has an asypmtotic chi-squared distribution with k degress of freedom; if the computed F statistic is significant, we reject our null hypothesis (H0: The time-series is stable). <code>Fstats</code> cannot be used to determine more than 1 breakpoint, but can indicate the location of potential breakpoints.</p>
+<pre class="r"><code>require(strucchange)</code></pre>
+<pre><code>## Loading required package: strucchange</code></pre>
+<pre><code>## Loading required package: zoo</code></pre>
+<pre><code>## 
+## Attaching package: &#39;zoo&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     as.Date, as.Date.numeric</code></pre>
+<pre><code>## Loading required package: sandwich</code></pre>
+<pre class="r"><code>f.break &lt;- Fstats(Mean.rise~1)
+plot(f.break)</code></pre>
+<p><img src="/post/2018-04-06-fun-friday-structural-breaks-part-1_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>f.break &lt;- Fstats(Mean.decline~1)
+plot(f.break)</code></pre>
+<p><img src="/post/2018-04-06-fun-friday-structural-breaks-part-1_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<p>As the maximum of a sequence of F statistics is equivalent to the minimum OLS estimator of the breakpoint in a 2-segment partition it can be extracted by <code>breakpoints</code> from an object of class “Fstats” as computed by Fstats. Use the <code>breakpoints</code> function in the strucchange package to get a computation of breakpoints in regression relationship. The function computes the number and location of the optimal breakpoints. Our goal here is to determine the <em>m</em> number of breaks, so we use the <code>confint</code> function to determine the breakpoints and their confidence intervals.</p>
+<pre class="r"><code>Rise.bp&lt;-breakpoints(Mean.rise~1, data=Mean.rise)
+Rise.bp</code></pre>
+<pre><code>## 
+##   Optimal 6-segment partition: 
+## 
+## Call:
+## breakpoints.formula(formula = Mean.rise ~ 1, data = Mean.rise)
+## 
+## Breakpoints at observation number:
+## 16 33 50 67 84 
+## 
+## Corresponding to breakdates:
+## 1930 1947 1964 1981 1998</code></pre>
+<pre class="r"><code>plot(Rise.bp)
+confint(Rise.bp)</code></pre>
+<pre><code>## 
+##   Confidence intervals for breakpoints
+##   of optimal 6-segment partition: 
+## 
+## Call:
+## confint.breakpointsfull(object = Rise.bp)
+## 
+## Breakpoints at observation number:
+##   2.5 % breakpoints 97.5 %
+## 1    15          16     17
+## 2    32          33     34
+## 3    49          50     51
+## 4    66          67     68
+## 5    83          84     85
+## 
+## Corresponding to breakdates:
+##   2.5 % breakpoints 97.5 %
+## 1  1929        1930   1931
+## 2  1946        1947   1948
+## 3  1963        1964   1965
+## 4  1980        1981   1982
+## 5  1997        1998   1999</code></pre>
+<pre class="r"><code>Decline.bp&lt;-breakpoints(Mean.decline~1, data=Mean.decline)
+Decline.bp</code></pre>
+<pre><code>## 
+##   Optimal 6-segment partition: 
+## 
+## Call:
+## breakpoints.formula(formula = Mean.decline ~ 1, data = Mean.decline)
+## 
+## Breakpoints at observation number:
+## 16 33 50 67 84 
+## 
+## Corresponding to breakdates:
+## 1930 1947 1964 1981 1998</code></pre>
+<pre class="r"><code>plot(Decline.bp)</code></pre>
+<p><img src="/post/2018-04-06-fun-friday-structural-breaks-part-1_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code>confint(Decline.bp)</code></pre>
+<pre><code>## 
+##   Confidence intervals for breakpoints
+##   of optimal 6-segment partition: 
+## 
+## Call:
+## confint.breakpointsfull(object = Decline.bp)
+## 
+## Breakpoints at observation number:
+##   2.5 % breakpoints 97.5 %
+## 1    15          16     17
+## 2    32          33     34
+## 3    49          50     51
+## 4    66          67     68
+## 5    83          84     85
+## 
+## Corresponding to breakdates:
+##   2.5 % breakpoints 97.5 %
+## 1  1929        1930   1931
+## 2  1946        1947   1948
+## 3  1963        1964   1965
+## 4  1980        1981   1982
+## 5  1997        1998   1999</code></pre>
+<p>Plotting the *.bp file shows the BIC (Bayesian Information Criterion, a model fit statistic) and the RSS (Residual Sum of Squares) estimates of the number of stable areas (i.e., number of areas with approximately equal means) in the data. In most cases, <code>breakpoints</code> returns a partition of the data according to the point at which these values meet. In both cases above, BIC and RSS agree that there are at least 5 breakpoints (i.e. six areas of stability) in both data sets.</p>
+<p>The graph below shows the consistency in structural breaks ability to detect instability amongst data sets with equal but opposing increases and decreases.</p>
+<pre class="r"><code>plot(Mean.rise, main=&quot;Rise and Decline Simulation&quot;, sub=&quot;from 1915 to 2015&quot;,ylab=&quot;Simulated Scores&quot;,ylim=c(0,100))
+lines(Mean.decline, col=2)
+legend(&#39;topright&#39;, c(&quot;Rise&quot;,&quot;Decline&quot;),col=c(1,2),pch=15)
+abline(v=c(1930, 1947, 1964, 1981, 1998), col=4,lty=2)</code></pre>
+<p><img src="/post/2018-04-06-fun-friday-structural-breaks-part-1_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="c.-structural-breaks-with-more-data-types-and-different-segment-sizes" class="section level3">
+<h3>c. Structural Breaks with More Data Types and Different Segment Sizes</h3>
+<div id="i.-exponential-curves" class="section level4">
+<h4>I. Exponential curves:</h4>
+<p>We need to test the breakpoint function’s flexibility to change the minimal segment size either given as a fraction relative to the sample size or as an interger giving the minimal number of observations in each segment.</p>
+<p>Generate regular sequences between 0 and 100 by 1 for a vector x. For x2, generate regular sequences between -50 and 50 by 1. Make vector y1 vector x to the fourth power, vector y2 vector x to the one fourth power, and vector y3 vector x2 to the third power.</p>
+<pre class="r"><code>x&lt;-seq(0,100,by=1)
+x2 &lt;- seq(-50,50,by=1)
+
+y1 &lt;- x^4
+y2 &lt;- (x)^(1/4)
+y3 &lt;- x2^3</code></pre>
+<p>Let’s look at y1 first. How does changing the resolution, a.k.a. the minimum number of observations required for each breakpoint, affect the estimates of the breakpoints?</p>
+<pre class="r"><code>f.break &lt;- Fstats(y1~1)
+plot(f.break)</code></pre>
+<p><img src="/post/2018-04-06-fun-friday-structural-breaks-part-1_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre class="r"><code>y1a.bp&lt;-breakpoints(y1~1)
+y1a.bp</code></pre>
+<pre><code>## 
+##   Optimal 4-segment partition: 
+## 
+## Call:
+## breakpoints.formula(formula = y1 ~ 1)
+## 
+## Breakpoints at observation number:
+## 55 71 86 
+## 
+## Corresponding to breakdates:
+## 0.5445545 0.7029703 0.8514851</code></pre>
+<pre class="r"><code>plot(y1)
+abline(v=time(y1)[y1a.bp$breakpoints],col=2,lty=2)</code></pre>
+<p><img src="/post/2018-04-06-fun-friday-structural-breaks-part-1_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
+<pre class="r"><code>f.break &lt;- Fstats(y1~1,from=5)
+plot(f.break)</code></pre>
+<p><img src="/post/2018-04-06-fun-friday-structural-breaks-part-1_files/figure-html/unnamed-chunk-8-3.png" width="672" /></p>
+<pre class="r"><code>y1b.bp&lt;-breakpoints(y1~1,h=5)
+y1b.bp</code></pre>
+<pre><code>## 
+##   Optimal 11-segment partition: 
+## 
+## Call:
+## breakpoints.formula(formula = y1 ~ 1, h = 5)
+## 
+## Breakpoints at observation number:
+## 40 52 60 66 71 76 81 86 91 96 
+## 
+## Corresponding to breakdates:
+## 0.3960396 0.5148515 0.5940594 0.6534653 0.7029703 0.7524752 0.8019802 0.8514851 0.9009901 0.950495</code></pre>
+<pre class="r"><code>plot(y1)
+abline(v=time(y1)[y1b.bp$breakpoints],col=4,lty=2,lwd=2)
+abline(v=time(y1)[y1a.bp$breakpoints],col=2,lty=2)</code></pre>
+<p><img src="/post/2018-04-06-fun-friday-structural-breaks-part-1_files/figure-html/unnamed-chunk-8-4.png" width="672" /></p>
+<p>The first <code>Fstat</code> and breakpoint location graphs of y1 shows where the breaks occur in the data with the default resolution of <code>from=0.15</code> and <code>h=0.15</code> respectively (that is, a minimum of 15% of the observations in each area of stability). The second <code>Fstat</code> graph and the <code>breakpoints</code> function uses <code>from=5</code> and <code>h=5</code> (a minimum of 5 observations in each area of stability), while the final graph plots the new breakpoints in blue and the old breakpoints in red. As we can see, changing the <em>from</em> and <em>h</em> values can change the number of breaks while potentially keeping some of the same breakpoints. The values we choose should be based on a) empirical theory that suggests the minimum number of observations before a change can be detected or b) the resolution we decide we want to have.</p>
+<p>With the effects of resolution determined, let’s continue testing the structural break null hypothesis for vectors y2 and y3 (with the default resolution settings). We should expect to see an equivalent set of breakpoints for y2 based on our previous trials, while for y3 we should see an island of stability in the middle of the sequence and equivalent sets of breakpoints at the beginning and end of it.</p>
+<pre class="r"><code>f.break &lt;- Fstats(y2~1)
+plot(f.break)</code></pre>
+<p><img src="/post/2018-04-06-fun-friday-structural-breaks-part-1_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<pre class="r"><code>y2.bp&lt;-breakpoints(y2~1,h=5)
+y2.bp</code></pre>
+<pre><code>## 
+##   Optimal 7-segment partition: 
+## 
+## Call:
+## breakpoints.formula(formula = y2 ~ 1, h = 5)
+## 
+## Breakpoints at observation number:
+## 5 12 23 37 55 76 
+## 
+## Corresponding to breakdates:
+## 0.04950495 0.1188119 0.2277228 0.3663366 0.5445545 0.7524752</code></pre>
+<pre class="r"><code>plot(y2)
+abline(v=time(y2)[y2.bp$breakpoints],col=2,lty=2)</code></pre>
+<p><img src="/post/2018-04-06-fun-friday-structural-breaks-part-1_files/figure-html/unnamed-chunk-9-2.png" width="672" /></p>
+<pre class="r"><code>f.break &lt;- Fstats(y3~1)
+plot(f.break)</code></pre>
+<p><img src="/post/2018-04-06-fun-friday-structural-breaks-part-1_files/figure-html/unnamed-chunk-9-3.png" width="672" /></p>
+<pre class="r"><code>y3.bp&lt;-breakpoints(y3~1,h=5)
+y3.bp</code></pre>
+<pre><code>## 
+##   Optimal 13-segment partition: 
+## 
+## Call:
+## breakpoints.formula(formula = y3 ~ 1, h = 5)
+## 
+## Breakpoints at observation number:
+## 5 10 15 20 26 34 67 75 81 86 91 96 
+## 
+## Corresponding to breakdates:
+## 0.04950495 0.0990099 0.1485149 0.1980198 0.2574257 0.3366337 0.6633663 0.7425743 0.8019802 0.8514851 0.9009901 0.950495</code></pre>
+<pre class="r"><code>plot(y3)
+abline(v=time(y3)[y3.bp$breakpoints],col=2,lty=2)</code></pre>
+<p><img src="/post/2018-04-06-fun-friday-structural-breaks-part-1_files/figure-html/unnamed-chunk-9-4.png" width="672" /></p>
+<p>These graphs confirm our expectations!</p>
+</div>
+</div>
+</div>
+<div id="closing-remarks" class="section level1">
+<h1>Closing Remarks</h1>
+<p>This was a rather long introduction to structural breaks, but hopefully does well to showcase some of the circumstances the procedure may be used. Next Friday, I’ll demonstrate how to use structural breaks with some real SAT data.</p>
+<p>Anthony</p>
+</div>

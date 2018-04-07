@@ -6,10 +6,19 @@
     <description>Recent content in Posts on Unstandard Deviations</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 04 Apr 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 06 Apr 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Fun Friday: Structural Breaks Part 1</title>
+      <link>/2018/04/06/fun-friday-structural-breaks-part-1/</link>
+      <pubDate>Fri, 06 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/04/06/fun-friday-structural-breaks-part-1/</guid>
+      <description>This is the introductory “Fun Friday” post, and unfortunately will be a rehash of some work I’ve done in the past with a colleague (Zachary Collier, Ph.D. Candidate in my program). The topic is a concept from econometrics called “Structural Breaks”, which are also referred to as change points in some contexts. This post walks through the application of structural breaks to SAT data using the strucchange package. This example was created three years ago, so other packages for performing this analysis probably exist, but that’s left as an exercise for any interested reader.</description>
+    </item>
     
     <item>
       <title>Hello World</title>

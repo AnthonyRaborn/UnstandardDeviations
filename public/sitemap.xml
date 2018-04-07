@@ -3,16 +3,28 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/2018/04/06/fun-friday-structural-breaks-part-1/</loc>
+    <lastmod>2018-04-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/about/</loc>
+    <lastmod>2018-04-04T22:00:00-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/2018/04/04/hello-world/</loc>
     <lastmod>2018-04-04T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/about/</loc>
+    <loc>/categories/</loc>
+    <priority>0</priority>
   </url>
   
   <url>
-    <loc>/categories/</loc>
+    <loc>/categories/fun-friday/</loc>
+    <lastmod>2018-04-06T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -24,7 +36,13 @@
   
   <url>
     <loc>/post/</loc>
-    <lastmod>2018-04-04T00:00:00+00:00</lastmod>
+    <lastmod>2018-04-06T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/r/</loc>
+    <lastmod>2018-04-06T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -35,13 +53,32 @@
   </url>
   
   <url>
+    <loc>/tags/sat/</loc>
+    <lastmod>2018-04-06T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/simulation/</loc>
+    <lastmod>2018-04-06T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/structural-breaks/</loc>
+    <lastmod>2018-04-06T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/tags/</loc>
+    <lastmod>2018-04-06T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/</loc>
-    <lastmod>2018-04-04T00:00:00+00:00</lastmod>
+    <lastmod>2018-04-06T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
