@@ -1,4 +1,4 @@
-baseurl = "http://anthony-raborn.netlify.com/"
+baseurl = "https://anthony-raborn.netlify.com/"
 canonifyURLs = true
 languageCode = "en-us"
 title = "Unstandard Deviations"
