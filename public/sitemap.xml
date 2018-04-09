@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/2018/04/09/musing-monday-reproducing-science-part-1/</loc>
+    <lastmod>2018-04-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/2018/04/06/fun-friday-structural-breaks-part-1/</loc>
     <lastmod>2018-04-06T00:00:00+00:00</lastmod>
   </url>
@@ -35,8 +40,14 @@
   </url>
   
   <url>
+    <loc>/categories/musing-monday/</loc>
+    <lastmod>2018-04-09T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/post/</loc>
-    <lastmod>2018-04-06T00:00:00+00:00</lastmod>
+    <lastmod>2018-04-09T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -53,8 +64,20 @@
   </url>
   
   <url>
+    <loc>/tags/reproducibility/</loc>
+    <lastmod>2018-04-09T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/tags/sat/</loc>
     <lastmod>2018-04-06T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/science/</loc>
+    <lastmod>2018-04-09T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -77,8 +100,14 @@
   </url>
   
   <url>
+    <loc>/tags/text-only/</loc>
+    <lastmod>2018-04-09T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/</loc>
-    <lastmod>2018-04-06T00:00:00+00:00</lastmod>
+    <lastmod>2018-04-09T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   

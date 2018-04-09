@@ -6,10 +6,19 @@
     <description>Recent content on Unstandard Deviations</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 06 Apr 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 09 Apr 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Musing Monday: Reproducing Science Part 1</title>
+      <link>/2018/04/09/musing-monday-reproducing-science-part-1/</link>
+      <pubDate>Mon, 09 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/04/09/musing-monday-reproducing-science-part-1/</guid>
+      <description>Part 1 of Reproducibility Show me the methods! One of the pet peeves I have regarding science in general is the lack of openness regarding the methods used. I&amp;rsquo;m not talking about which statistical tests were used (although sometimes that&amp;rsquo;s hard to decipher from papers or talks). Rather, there seems to be a reluctance for academics to fully describe the steps they took throughout the entire research process&amp;ndash;how they acquired the sample, any power analyses ran prior to the study to inform sample size requirements, techniques used to record and store data, decisions made with regards to missingness, etc.</description>
+    </item>
     
     <item>
       <title>Fun Friday: Structural Breaks Part 1</title>
