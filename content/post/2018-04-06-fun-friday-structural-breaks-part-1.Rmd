@@ -1,6 +1,6 @@
 ---
 title: 'Fun Friday: Structural Breaks Part 1'
-author: ~
+author: Anthony Raborn
 date: '2018-04-06'
 slug: fun-friday-structural-breaks-part-1
 categories:
