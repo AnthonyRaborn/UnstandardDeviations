@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/2018/04/15/aera-ncme-2018-update/</loc>
+    <lastmod>2018-04-15T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/2018/04/09/musing-monday-reproducing-science-part-1/</loc>
     <lastmod>2018-04-09T00:00:00+00:00</lastmod>
   </url>
@@ -23,7 +28,17 @@
   </url>
   
   <url>
+    <loc>/1/01/01/</loc>
+  </url>
+  
+  <url>
     <loc>/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/conference/</loc>
+    <lastmod>2018-04-15T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -40,6 +55,12 @@
   </url>
   
   <url>
+    <loc>/categories/irregular-update/</loc>
+    <lastmod>2018-04-15T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/categories/musing-monday/</loc>
     <lastmod>2018-04-09T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -47,7 +68,7 @@
   
   <url>
     <loc>/post/</loc>
-    <lastmod>2018-04-09T00:00:00+00:00</lastmod>
+    <lastmod>2018-04-15T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -66,6 +87,12 @@
   <url>
     <loc>/tags/reproducibility/</loc>
     <lastmod>2018-04-09T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/research-idea/</loc>
+    <lastmod>2018-04-15T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -95,7 +122,7 @@
   
   <url>
     <loc>/tags/</loc>
-    <lastmod>2018-04-06T00:00:00+00:00</lastmod>
+    <lastmod>2018-04-15T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -107,7 +134,7 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2018-04-09T00:00:00+00:00</lastmod>
+    <lastmod>2018-04-15T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
