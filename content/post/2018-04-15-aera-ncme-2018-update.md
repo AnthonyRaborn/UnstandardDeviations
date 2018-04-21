@@ -1,5 +1,5 @@
 ---
-title: AERA/NCME 2018 Update
+title: AERA NCME 2018 Update
 author: Anthony Raborn
 date: '2018-04-15'
 slug: aera-ncme-2018-update
