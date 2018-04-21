@@ -1,0 +1,118 @@
+---
+title: 'Fun Friday: Structural Breaks Part 2'
+author: Anthony Raborn
+date: '2018-04-20'
+slug: fun-friday-structural-breaks-part-2
+categories:
+  - Fun Friday
+tags:
+  - R
+  - Structural Breaks
+  - SAT
+  - Simulation
+---
+
+This is a follow-up to the introductory "Fun Friday" post (Part 2 of Structural Breaks). Click [here](./2018/04/06/fun-friday-structural-breaks-part-1/) for Part 1.
+
+```{r}
+require(strucchange)
+```
+
+#### II. Simulated SAT Data
+##### a. Abrupt Change
+
+Simulated data based on SAT scores, but with an exaggerated dropoff, called Mean.abrupt; the idea is to see the effect of a larger range of data (481-399) that maintains a similar range of scores after some time (4 years). We'll make time-series for Mean.abrupt making years 1972 to 2008 to match the real data.
+
+```{r}
+Mean.abrupt <- c(480,463,441,420,409,407,407,405,402,402,404,403,404,409,409,407,405,404,400,399,400,400,399,404,405,405,405,405,405,406,404,407,408,408,403,402,402)
+
+Mean.abrupt <- ts(Mean.abrupt, start=1972, end=2008, frequency=1)
+plot(Mean.abrupt)
+
+f.break <- Fstats(Mean.abrupt~1)
+plot(f.break)
+
+Abrupt.bp<-breakpoints(Mean.abrupt~1, data=Mean.abrupt)
+Abrupt.bp
+plot(Abrupt.bp)
+```
+
+As `breakpoints` shows, we detect a break point at 1976, five years after the start of the data, which corresponds with the end of the dropoff we created. Because the resolution was set for 5 minimum observations, we see that the start of the section of the time series that is similar to the real data is included in the first area of stability.
+
+##### b. Revisiting Resolution: 
+
+The graph below shows that the `strucchange` functions are sensitive to the overall values of the data and the relative changes in those values using the above abrupt change data and the real data it was modeled from. The breakpoints estimates for both time series had a resolution of 2 minimum observations per break. Compared to above, we see that there were two breakpoints during the dropoff period but none after for the abrupt data, while the real data has multiple (valid or not) breakpoints detected during the abrupt data's stable period.
+
+```{r, echo=FALSE}
+cr.total <- c(530,523,521,512,509,507,507,505,502,502,504,503,504,509,509,507,505,504,500,499,500,500,499,504,505,505,505,505,505,506,504,507,508,508,503,502,502)
+cr.total <- ts(cr.total, start=1972, end=2008)
+cr.total.bp<-breakpoints(cr.total~1, data=cr.total,h=2)
+Abrupt.bp<-breakpoints(Mean.abrupt~1, data=Mean.abrupt,h=2)
+```
+
+```{r}
+plot(cr.total, main="Critical Reading SAT Scores and Simulation", sub="from 1972 to 2008",ylab="Critical Reading Scores",ylim=c(400,535),col=3)
+lines(Mean.abrupt, col=6)
+legend('topright', c("SAT CR","Sim"),col=c(3,6),pch=15)
+abline(v=time(cr.total)[cr.total.bp$breakpoints],col=3,lty=2)
+abline(v=time(Mean.abrupt)[Abrupt.bp$breakpoints],col=6, lty=2)
+```
+
+# Section 2: Overall SAT Scores from 1999 to 2011
+### a. Importing the data by Ethnicity
+
+Using the mean SAT scores for all ethnicities from 1999 to 2011, we'll repeat most of the steps described in Section 1, adding the step of putting the scores into a vector that repeats the scores three times using the "rep" function. The assumption here is that we have mean scores from the SAT at three separate occurances within each year, bringing our total observed scores to n=39. We need around this number of observations at the minimum in order to detect any breaks in the data.
+
+```{r}
+Mean.all <- rep(c(505,506,504,507,508,508,503,502,502,501,501,497,496),each=3)
+Mean.all <- ts(Mean.all, start=c(1999), end=c(2011), frequency=3)
+plot(Mean.all)
+```
+
+Now, let's repeat the above steps for the category of "Other" ethnicities, then for the remaining categories.
+
+```{r}
+Mean.other <- rep(c(508,503,502,501,494,495,494,497,496,494,494,493,491),each=3) # Other
+Mean.other <- ts(Mean.other, start=c(1999), end=c(2011),frequency=3)
+
+Mean.hispanic <- rep(c(461,460,458,457,461,463,458,459,455,455,454,451,447),each=3) # Hispanic
+Mean.hispanic <- ts(Mean.hispanic, start=c(1999), end=c(2011),frequency=3)
+
+Mean.AI <- rep(c(482,481,479,480,483,489,487,487,485,486,485,484,482),each=3) # American Indian
+Mean.AI <- ts(Mean.AI, start=c(1999), end=c(2011),frequency=3)
+
+Mean.Puerto <- rep(c(456,457,455,456,457,460,459,459,456,452,454,452,452),each=3) # Puerto Rican
+Mean.Puerto <- ts(Mean.Puerto, start=c(1999), end=c(2011),frequency=3)
+
+Mean.Asian <- rep(c(499,501,501,508,507,511,510,514,513,516,519,517,518),each=3) # Asian
+Mean.Asian <- ts(Mean.Asian, start=c(1999), end=c(2011),frequency=3)
+
+Mean.Black <- rep(c(434,433,430,431,430,433,434,433,430,429,429,428,428),each=3) # Black
+Mean.Black <- ts(Mean.Black, start=c(1999), end=c(2011),frequency=3)
+
+Mean.White <- rep(c(528,529,527,529,528,532,527,527,528,528,528,528,527),each=3) # White
+Mean.White <- ts(Mean.White, start=c(1999), end=c(2011),frequency=3)
+```
+
+Now we can aggregate the different lines for each ethnicity onto a single plot.
+
+```{r}
+plot(Mean.all, main="Mean CR SAT Scores by Ethnicity", sub="From 1999 to 2011", ylab="Mean Score", ylim=c(425,580),bty='L')
+legend('topright',c("All","American Indian","Asian","Black","Puerto Rican","White","Hispanic","Other"),col=c(1,2,3,4,5,6,7,8),pch=15,bty='n', cex = 0.6)
+lines(Mean.Asian, col=3)
+lines(Mean.Black, col=4)
+lines(Mean.Puerto, col=5)
+lines(Mean.White, col=6)
+lines(Mean.hispanic, col=7)
+lines(Mean.other, col=8)
+```
+
+We can see that there should be different breakpoints for many of the groups just by looking at the differences in range and slope shown by the graph, but what can `strucchange` pick up on?
+
+
+# Closing Remarks
+
+With this, we begin to see how structural breaks may be used with actual data. Next week, the final portion of this guide will be uploaded, with some more examples; then, it will be on to newer guides on some of the fun or interesting things that can be done in R!
+
+Anthony
+
