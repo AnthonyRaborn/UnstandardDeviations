@@ -6,10 +6,20 @@
     <description>Recent content in Posts on Unstandard Deviations</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 15 Apr 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 20 Apr 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Fun Friday: Structural Breaks Part 2</title>
+      <link>/2018/04/20/fun-friday-structural-breaks-part-2/</link>
+      <pubDate>Fri, 20 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/04/20/fun-friday-structural-breaks-part-2/</guid>
+      <description>This is a follow-up to the introductory “Fun Friday” post (Part 2 of Structural Breaks). Click here for Part 1.
+require(strucchange)## Loading required package: strucchange## Loading required package: zoo## ## Attaching package: &amp;#39;zoo&amp;#39;## The following objects are masked from &amp;#39;package:base&amp;#39;:## ## as.Date, as.Date.numeric## Loading required package: sandwichII. Simulated SAT Dataa. Abrupt ChangeSimulated data based on SAT scores, but with an exaggerated dropoff, called Mean.</description>
+    </item>
     
     <item>
       <title>AERA/NCME 2018 Update</title>

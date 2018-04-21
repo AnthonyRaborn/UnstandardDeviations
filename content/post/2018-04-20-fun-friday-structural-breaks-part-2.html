@@ -1,0 +1,115 @@
+---
+title: 'Fun Friday: Structural Breaks Part 2'
+author: Anthony Raborn
+date: '2018-04-20'
+slug: fun-friday-structural-breaks-part-2
+categories:
+  - Fun Friday
+tags:
+  - R
+  - Structural Breaks
+  - SAT
+  - Simulation
+---
+
+
+
+<p>This is a follow-up to the introductory “Fun Friday” post (Part 2 of Structural Breaks). Click <a href="https://anthony-raborn.netlify.com/2018/04/06/fun-friday-structural-breaks-part-1/">here</a> for Part 1.</p>
+<pre class="r"><code>require(strucchange)</code></pre>
+<pre><code>## Loading required package: strucchange</code></pre>
+<pre><code>## Loading required package: zoo</code></pre>
+<pre><code>## 
+## Attaching package: &#39;zoo&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     as.Date, as.Date.numeric</code></pre>
+<pre><code>## Loading required package: sandwich</code></pre>
+<div id="ii.-simulated-sat-data" class="section level4">
+<h4>II. Simulated SAT Data</h4>
+<div id="a.-abrupt-change" class="section level5">
+<h5>a. Abrupt Change</h5>
+<p>Simulated data based on SAT scores, but with an exaggerated dropoff, called Mean.abrupt; the idea is to see the effect of a larger range of data (481-399) that maintains a similar range of scores after some time (4 years). We’ll make time-series for Mean.abrupt making years 1972 to 2008 to match the real data.</p>
+<pre class="r"><code>Mean.abrupt &lt;- c(480,463,441,420,409,407,407,405,402,402,404,403,404,409,409,407,405,404,400,399,400,400,399,404,405,405,405,405,405,406,404,407,408,408,403,402,402)
+
+Mean.abrupt &lt;- ts(Mean.abrupt, start=1972, end=2008, frequency=1)
+plot(Mean.abrupt)</code></pre>
+<p><img src="/post/2018-04-20-fun-friday-structural-breaks-part-2_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code>f.break &lt;- Fstats(Mean.abrupt~1)
+plot(f.break)</code></pre>
+<p><img src="/post/2018-04-20-fun-friday-structural-breaks-part-2_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
+<pre class="r"><code>Abrupt.bp&lt;-breakpoints(Mean.abrupt~1, data=Mean.abrupt)
+Abrupt.bp</code></pre>
+<pre><code>## 
+##   Optimal 2-segment partition: 
+## 
+## Call:
+## breakpoints.formula(formula = Mean.abrupt ~ 1, data = Mean.abrupt)
+## 
+## Breakpoints at observation number:
+## 5 
+## 
+## Corresponding to breakdates:
+## 1976</code></pre>
+<pre class="r"><code>plot(Abrupt.bp)</code></pre>
+<p><img src="/post/2018-04-20-fun-friday-structural-breaks-part-2_files/figure-html/unnamed-chunk-2-3.png" width="672" /></p>
+<p>As <code>breakpoints</code> shows, we detect a break point at 1976, five years after the start of the data, which corresponds with the end of the dropoff we created. Because the resolution was set for 5 minimum observations, we see that the start of the section of the time series that is similar to the real data is included in the first area of stability.</p>
+</div>
+<div id="b.-revisiting-resolution" class="section level5">
+<h5>b. Revisiting Resolution:</h5>
+<p>The graph below shows that the <code>strucchange</code> functions are sensitive to the overall values of the data and the relative changes in those values using the above abrupt change data and the real data it was modeled from. The breakpoints estimates for both time series had a resolution of 2 minimum observations per break. Compared to above, we see that there were two breakpoints during the dropoff period but none after for the abrupt data, while the real data has multiple (valid or not) breakpoints detected during the abrupt data’s stable period.</p>
+<pre class="r"><code>plot(cr.total, main=&quot;Critical Reading SAT Scores and Simulation&quot;, sub=&quot;from 1972 to 2008&quot;,ylab=&quot;Critical Reading Scores&quot;,ylim=c(400,535),col=3)
+lines(Mean.abrupt, col=6)
+legend(&#39;topright&#39;, c(&quot;SAT CR&quot;,&quot;Sim&quot;),col=c(3,6),pch=15)
+abline(v=time(cr.total)[cr.total.bp$breakpoints],col=3,lty=2)
+abline(v=time(Mean.abrupt)[Abrupt.bp$breakpoints],col=6, lty=2)</code></pre>
+<p><img src="/post/2018-04-20-fun-friday-structural-breaks-part-2_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+</div>
+<div id="section-2-overall-sat-scores-from-1999-to-2011" class="section level1">
+<h1>Section 2: Overall SAT Scores from 1999 to 2011</h1>
+<div id="a.-importing-the-data-by-ethnicity" class="section level3">
+<h3>a. Importing the data by Ethnicity</h3>
+<p>Using the mean SAT scores for all ethnicities from 1999 to 2011, we’ll repeat most of the steps described in Section 1, adding the step of putting the scores into a vector that repeats the scores three times using the “rep” function. The assumption here is that we have mean scores from the SAT at three separate occurances within each year, bringing our total observed scores to n=39. We need around this number of observations at the minimum in order to detect any breaks in the data.</p>
+<pre class="r"><code>Mean.all &lt;- rep(c(505,506,504,507,508,508,503,502,502,501,501,497,496),each=3)
+Mean.all &lt;- ts(Mean.all, start=c(1999), end=c(2011), frequency=3)
+plot(Mean.all)</code></pre>
+<p><img src="/post/2018-04-20-fun-friday-structural-breaks-part-2_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Now, let’s repeat the above steps for the category of “Other” ethnicities, then for the remaining categories.</p>
+<pre class="r"><code>Mean.other &lt;- rep(c(508,503,502,501,494,495,494,497,496,494,494,493,491),each=3) # Other
+Mean.other &lt;- ts(Mean.other, start=c(1999), end=c(2011),frequency=3)
+
+Mean.hispanic &lt;- rep(c(461,460,458,457,461,463,458,459,455,455,454,451,447),each=3) # Hispanic
+Mean.hispanic &lt;- ts(Mean.hispanic, start=c(1999), end=c(2011),frequency=3)
+
+Mean.AI &lt;- rep(c(482,481,479,480,483,489,487,487,485,486,485,484,482),each=3) # American Indian
+Mean.AI &lt;- ts(Mean.AI, start=c(1999), end=c(2011),frequency=3)
+
+Mean.Puerto &lt;- rep(c(456,457,455,456,457,460,459,459,456,452,454,452,452),each=3) # Puerto Rican
+Mean.Puerto &lt;- ts(Mean.Puerto, start=c(1999), end=c(2011),frequency=3)
+
+Mean.Asian &lt;- rep(c(499,501,501,508,507,511,510,514,513,516,519,517,518),each=3) # Asian
+Mean.Asian &lt;- ts(Mean.Asian, start=c(1999), end=c(2011),frequency=3)
+
+Mean.Black &lt;- rep(c(434,433,430,431,430,433,434,433,430,429,429,428,428),each=3) # Black
+Mean.Black &lt;- ts(Mean.Black, start=c(1999), end=c(2011),frequency=3)
+
+Mean.White &lt;- rep(c(528,529,527,529,528,532,527,527,528,528,528,528,527),each=3) # White
+Mean.White &lt;- ts(Mean.White, start=c(1999), end=c(2011),frequency=3)</code></pre>
+<p>Now we can aggregate the different lines for each ethnicity onto a single plot.</p>
+<pre class="r"><code>plot(Mean.all, main=&quot;Mean CR SAT Scores by Ethnicity&quot;, sub=&quot;From 1999 to 2011&quot;, ylab=&quot;Mean Score&quot;, ylim=c(425,580),bty=&#39;L&#39;)
+legend(&#39;topright&#39;,c(&quot;All&quot;,&quot;American Indian&quot;,&quot;Asian&quot;,&quot;Black&quot;,&quot;Puerto Rican&quot;,&quot;White&quot;,&quot;Hispanic&quot;,&quot;Other&quot;),col=c(1,2,3,4,5,6,7,8),pch=15,bty=&#39;n&#39;, cex = 0.6)
+lines(Mean.Asian, col=3)
+lines(Mean.Black, col=4)
+lines(Mean.Puerto, col=5)
+lines(Mean.White, col=6)
+lines(Mean.hispanic, col=7)
+lines(Mean.other, col=8)</code></pre>
+<p><img src="/post/2018-04-20-fun-friday-structural-breaks-part-2_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>We can see that there should be different breakpoints for many of the groups just by looking at the differences in range and slope shown by the graph, but what can <code>strucchange</code> pick up on?</p>
+</div>
+</div>
+<div id="closing-remarks" class="section level1">
+<h1>Closing Remarks</h1>
+<p>With this, we begin to see how structural breaks may be used with actual data. Next week, the final portion of this guide will be uploaded, with some more examples; then, it will be on to newer guides on some of the fun or interesting things that can be done in R!</p>
+<p>Anthony</p>
+</div>
