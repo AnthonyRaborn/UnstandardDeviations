@@ -1,0 +1,108 @@
+---
+title: 'Workday Wednesday: Some Progress on Simulated Annealing'
+author: Anthony Raborn
+date: '2018-04-25'
+slug: workday-wednesday-some-progress-on-simulated-annealing
+categories: [Workday Wednesday]
+tags: [Simulated Annealing, Machine Learning Algorithms, R, Short Forms]
+type: post
+description: A short discussion on building simulated annealing for short forms
+keywords:
+  - simulated annealing
+  - short forms
+  - machine learning
+topics:
+  - R
+---
+
+# Workday Wednesday: First Post!
+
+Welcome to the introductory Workday Wednesday post, where I briefly discuss some of the research I have been working on recently. In this post, I want to write about some of the work I am doing to introduce Simulated Annealing (SA) to the task of creating short forms. For more detail about just *what* SA entails, please check the [Wikipedia page](https://en.wikipedia.org/wiki/Simulated_annealing).
+
+## Simulated Annealing
+
+The SA process is nice in that the algorithm lends itself to being chunked into individual functions; building a function to perform SA, then, is easy since you can break the algorithm into its constituent pieces. The piece I would like to solve first is the so-called "randomNeighbor" function, which controls the portion of the annealing process that finds candidate models. What makes SA appealing to me is the idea that multiple changes can occur at once (similar to the ant colony optimization algorithm), so I wanted to create a randomNeighbor function that allows for a random number of changes.
+
+### randomNeighbor
+#### Initial attempt: fixed number of changes
+
+The first completed function I made for this process can be seen below:
+
+```{r randomNeighbor fixed changes, eval = FALSE}
+randomNeighbor <- function(currentModelObject = currentModel, numChanges = numChanges) {
+  
+  # using lavaan functions, construct a full parameter table
+  paramTable <- lavaan::parTable(currentModelObject)
+  fullParamTable <- lavaan:::lav_partable_full(paramTable)
+  currentModelParams <- lavaan::lav_partable_merge(paramTable, fullParamTable, remove.duplicated = TRUE, warn=FALSE)
+  
+  # select the rows that correspond to parameters related to the latent variables
+  latentVariables <- row.names(inspect(currentModelObject, "cor.lv"))
+  currentModelParamsLV <- currentModelParams[currentModelParams$lhs %in% latentVariables,]
+  
+  # randomly select numChanges rows to make changes to
+  randomChangesRows <- sample(currentModelParamsLV$id, size = numChanges, replace = T)
+  changeParamTable <- currentModelParams[randomChangesRows,]
+    
+  # make the changes. If currently free, fix to 0; if fixed to 0, set to free
+  currentModelParams$free[randomChangesRows] <- 1 - currentModelParams$free[randomChangesRows]
+  
+  # remove the starting value, estimates, and standard errors of the currentModel
+  currentModelParams$est <- NULL
+  currentModelParams$se <- NULL
+  currentModelParams$start <- NULL
+  currentModelParams$labels <- NULL
+  
+  # refit the model
+  prevModel <- as.list(currentModel@call)
+  prevModel$model <- currentModelParams
+  randomNeighborModel <- try(do.call(eval(parse(text="lavaan::lavaan")),prevModel[-1]),silent=TRUE)
+  
+  return(randomNeighborModel)
+}
+```
+
+Using some `lavaan` functions and tables, this initial function makes `numChanges` random changes in the code (I'm currently not sure to what degree the kinds of changes should be allowed, but that's for another post). 
+
+#### Random number of changes?
+
+My idea for allowing for a random number of changes would look something like this:
+
+```{r randomNeighbor random changes, eval = FALSE}
+randomNeighbor <- function(currentModelObject = currentModel, maxChanges = maxChanges) {
+  
+  # using lavaan functions, construct a full parameter table
+  paramTable <- lavaan::parTable(currentModelObject)
+  fullParamTable <- lavaan:::lav_partable_full(paramTable)
+  currentModelParams <- lavaan::lav_partable_merge(paramTable, fullParamTable, remove.duplicated = TRUE, warn=FALSE)
+  
+  # select the rows that correspond to parameters related to the latent variables
+  latentVariables <- row.names(inspect(currentModelObject, "cor.lv"))
+  currentModelParamsLV <- currentModelParams[currentModelParams$lhs %in% latentVariables,]
+  
+  # randomly select between 1 and maxChanges rows to make changes to
+  numChanges <- sample(x = 1:maxChanges, size = 1)
+  randomChangesRows <- sample(currentModelParamsLV$id, size = numChanges, replace = T)
+  changeParamTable <- currentModelParams[randomChangesRows,]
+    
+  # make the changes. If currently free, fix to 0; if fixed to 0, set to free
+  currentModelParams$free[randomChangesRows] <- 1 - currentModelParams$free[randomChangesRows]
+  
+  # remove the starting value, estimates, and standard errors of the currentModel
+  currentModelParams$est <- NULL
+  currentModelParams$se <- NULL
+  currentModelParams$start <- NULL
+  currentModelParams$labels <- NULL
+  
+  # refit the model
+  prevModel <- as.list(currentModel@call)
+  prevModel$model <- currentModelParams
+  randomNeighborModel <- try(do.call(eval(parse(text="lavaan::lavaan")),prevModel[-1]),silent=TRUE)
+  
+  return(randomNeighborModel)
+}
+```
+
+This would allow for a random number of changes, but does not provide for any weights with regard to the number of changes to be made. I'm not sure if this solution would be adequate for creating short forms since I haven't finished a working implementation of SA yet, but I think it's a good start.
+
+I think I may include the random number of changes as an option, since I've grown to appreciate functions that clearly and easily allow for tweaks to certain options. If only I had more people giving me feedback on the rest of the functions included in [ShortForm](https://cran.r-project.org/package=ShortForm) already!

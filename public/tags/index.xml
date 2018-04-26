@@ -30,9 +30,18 @@
     </item>
     
     <item>
+      <title>Machine Learning Algorithms</title>
+      <link>/tags/machine-learning-algorithms/</link>
+      <pubDate>Wed, 25 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/machine-learning-algorithms/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>R</title>
       <link>/tags/r/</link>
-      <pubDate>Fri, 20 Apr 2018 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 25 Apr 2018 00:00:00 +0000</pubDate>
       
       <guid>/tags/r/</guid>
       <description></description>
@@ -71,6 +80,24 @@
       <pubDate>Mon, 09 Apr 2018 00:00:00 +0000</pubDate>
       
       <guid>/tags/science/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Short Forms</title>
+      <link>/tags/short-forms/</link>
+      <pubDate>Wed, 25 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/short-forms/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Simulated Annealing</title>
+      <link>/tags/simulated-annealing/</link>
+      <pubDate>Wed, 25 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/simulated-annealing/</guid>
       <description></description>
     </item>
     

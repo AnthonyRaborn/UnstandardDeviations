@@ -1,0 +1,104 @@
+---
+title: 'Workday Wednesday: Some Progress on Simulated Annealing'
+author: Anthony Raborn
+date: '2018-04-25'
+slug: workday-wednesday-some-progress-on-simulated-annealing
+categories: [Workday Wednesday]
+tags: [Simulated Annealing, Machine Learning Algorithms, R, Short Forms]
+type: post
+description: A short discussion on building simulated annealing for short forms
+keywords:
+  - simulated annealing
+  - short forms
+  - machine learning
+topics:
+  - R
+---
+
+
+
+<div id="workday-wednesday-first-post" class="section level1">
+<h1>Workday Wednesday: First Post!</h1>
+<p>Welcome to the introductory Workday Wednesday post, where I briefly discuss some of the research I have been working on recently. In this post, I want to write about some of the work I am doing to introduce Simulated Annealing (SA) to the task of creating short forms. For more detail about just <em>what</em> SA entails, please check the <a href="https://en.wikipedia.org/wiki/Simulated_annealing">Wikipedia page</a>.</p>
+<div id="simulated-annealing" class="section level2">
+<h2>Simulated Annealing</h2>
+<p>The SA process is nice in that the algorithm lends itself to being chunked into individual functions; building a function to perform SA, then, is easy since you can break the algorithm into its constituent pieces. The piece I would like to solve first is the so-called “randomNeighbor” function, which controls the portion of the annealing process that finds candidate models. What makes SA appealing to me is the idea that multiple changes can occur at once (similar to the ant colony optimization algorithm), so I wanted to create a randomNeighbor function that allows for a random number of changes.</p>
+<div id="randomneighbor" class="section level3">
+<h3>randomNeighbor</h3>
+<div id="initial-attempt-fixed-number-of-changes" class="section level4">
+<h4>Initial attempt: fixed number of changes</h4>
+<p>The first completed function I made for this process can be seen below:</p>
+<pre class="r"><code>randomNeighbor &lt;- function(currentModelObject = currentModel, numChanges = numChanges) {
+  
+  # using lavaan functions, construct a full parameter table
+  paramTable &lt;- lavaan::parTable(currentModelObject)
+  fullParamTable &lt;- lavaan:::lav_partable_full(paramTable)
+  currentModelParams &lt;- lavaan::lav_partable_merge(paramTable, fullParamTable, remove.duplicated = TRUE, warn=FALSE)
+  
+  # select the rows that correspond to parameters related to the latent variables
+  latentVariables &lt;- row.names(inspect(currentModelObject, &quot;cor.lv&quot;))
+  currentModelParamsLV &lt;- currentModelParams[currentModelParams$lhs %in% latentVariables,]
+  
+  # randomly select numChanges rows to make changes to
+  randomChangesRows &lt;- sample(currentModelParamsLV$id, size = numChanges, replace = T)
+  changeParamTable &lt;- currentModelParams[randomChangesRows,]
+    
+  # make the changes. If currently free, fix to 0; if fixed to 0, set to free
+  currentModelParams$free[randomChangesRows] &lt;- 1 - currentModelParams$free[randomChangesRows]
+  
+  # remove the starting value, estimates, and standard errors of the currentModel
+  currentModelParams$est &lt;- NULL
+  currentModelParams$se &lt;- NULL
+  currentModelParams$start &lt;- NULL
+  currentModelParams$labels &lt;- NULL
+  
+  # refit the model
+  prevModel &lt;- as.list(currentModel@call)
+  prevModel$model &lt;- currentModelParams
+  randomNeighborModel &lt;- try(do.call(eval(parse(text=&quot;lavaan::lavaan&quot;)),prevModel[-1]),silent=TRUE)
+  
+  return(randomNeighborModel)
+}</code></pre>
+<p>Using some <code>lavaan</code> functions and tables, this initial function makes <code>numChanges</code> random changes in the code (I’m currently not sure to what degree the kinds of changes should be allowed, but that’s for another post).</p>
+</div>
+<div id="random-number-of-changes" class="section level4">
+<h4>Random number of changes?</h4>
+<p>My idea for allowing for a random number of changes would look something like this:</p>
+<pre class="r"><code>randomNeighbor &lt;- function(currentModelObject = currentModel, maxChanges = maxChanges) {
+  
+  # using lavaan functions, construct a full parameter table
+  paramTable &lt;- lavaan::parTable(currentModelObject)
+  fullParamTable &lt;- lavaan:::lav_partable_full(paramTable)
+  currentModelParams &lt;- lavaan::lav_partable_merge(paramTable, fullParamTable, remove.duplicated = TRUE, warn=FALSE)
+  
+  # select the rows that correspond to parameters related to the latent variables
+  latentVariables &lt;- row.names(inspect(currentModelObject, &quot;cor.lv&quot;))
+  currentModelParamsLV &lt;- currentModelParams[currentModelParams$lhs %in% latentVariables,]
+  
+  # randomly select between 1 and maxChanges rows to make changes to
+  numChanges &lt;- sample(x = 1:maxChanges, size = 1)
+  randomChangesRows &lt;- sample(currentModelParamsLV$id, size = numChanges, replace = T)
+  changeParamTable &lt;- currentModelParams[randomChangesRows,]
+    
+  # make the changes. If currently free, fix to 0; if fixed to 0, set to free
+  currentModelParams$free[randomChangesRows] &lt;- 1 - currentModelParams$free[randomChangesRows]
+  
+  # remove the starting value, estimates, and standard errors of the currentModel
+  currentModelParams$est &lt;- NULL
+  currentModelParams$se &lt;- NULL
+  currentModelParams$start &lt;- NULL
+  currentModelParams$labels &lt;- NULL
+  
+  # refit the model
+  prevModel &lt;- as.list(currentModel@call)
+  prevModel$model &lt;- currentModelParams
+  randomNeighborModel &lt;- try(do.call(eval(parse(text=&quot;lavaan::lavaan&quot;)),prevModel[-1]),silent=TRUE)
+  
+  return(randomNeighborModel)
+}</code></pre>
+<p>This would allow for a random number of changes, but does not provide for any weights with regard to the number of changes to be made. I’m not sure if this solution would be adequate for creating short forms since I haven’t finished a working implementation of SA yet, but I think it’s a good start.</p>
+<p>I think I may include the random number of changes as an option, since I’ve grown to appreciate functions that clearly and easily allow for tweaks to certain options. If only I had more people giving me feedback on the rest of the functions included in <a href="https://cran.r-project.org/package=ShortForm">ShortForm</a> already!</p>
+</div>
+</div>
+</div>
+</div>

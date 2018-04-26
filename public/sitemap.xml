@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/2018/04/25/workday-wednesday-some-progress-on-simulated-annealing/</loc>
+    <lastmod>2018-04-25T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/2018/04/23/musing-monday-job-searching/</loc>
     <lastmod>2018-04-23T00:00:00+00:00</lastmod>
   </url>
@@ -81,6 +86,12 @@
   </url>
   
   <url>
+    <loc>/tags/machine-learning-algorithms/</loc>
+    <lastmod>2018-04-25T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/categories/musing-monday/</loc>
     <lastmod>2018-04-23T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -88,13 +99,13 @@
   
   <url>
     <loc>/post/</loc>
-    <lastmod>2018-04-23T00:00:00+00:00</lastmod>
+    <lastmod>2018-04-25T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/tags/r/</loc>
-    <lastmod>2018-04-20T00:00:00+00:00</lastmod>
+    <lastmod>2018-04-25T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -129,6 +140,18 @@
   </url>
   
   <url>
+    <loc>/tags/short-forms/</loc>
+    <lastmod>2018-04-25T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/simulated-annealing/</loc>
+    <lastmod>2018-04-25T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/tags/simulation/</loc>
     <lastmod>2018-04-20T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -154,7 +177,13 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2018-04-23T00:00:00+00:00</lastmod>
+    <lastmod>2018-04-25T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/workday-wednesday/</loc>
+    <lastmod>2018-04-25T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   

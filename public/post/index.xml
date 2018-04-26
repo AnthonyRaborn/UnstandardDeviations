@@ -6,10 +6,20 @@
     <description>Recent content in Posts on Unstandard Deviations</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 23 Apr 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 25 Apr 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Workday Wednesday: Some Progress on Simulated Annealing</title>
+      <link>/2018/04/25/workday-wednesday-some-progress-on-simulated-annealing/</link>
+      <pubDate>Wed, 25 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/04/25/workday-wednesday-some-progress-on-simulated-annealing/</guid>
+      <description>Workday Wednesday: First Post!Welcome to the introductory Workday Wednesday post, where I briefly discuss some of the research I have been working on recently. In this post, I want to write about some of the work I am doing to introduce Simulated Annealing (SA) to the task of creating short forms. For more detail about just what SA entails, please check the Wikipedia page.
+Simulated AnnealingThe SA process is nice in that the algorithm lends itself to being chunked into individual functions; building a function to perform SA, then, is easy since you can break the algorithm into its constituent pieces.</description>
+    </item>
     
     <item>
       <title>Musing Monday: Job Searching</title>
