@@ -24,7 +24,7 @@
   "dependencies": {
     "atom-one-pgyments": "^1.0.0",
     "hack": "^0.8.1",
-    "lazysizes": "^4.0.1",
+    "lazysizes": "^5.2.1",
     "smoothscroll-polyfill": "^0.4.3",
     "fuse.js": "^3.2.0",
     "mark.js": "^8.11.1",
